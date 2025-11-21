@@ -16,15 +16,26 @@
 
 <resources>
     <string name="app_name">Unscramble</string>
+    <string name="app_name_ru">Угадай слово</string>
     <string name="instructions">Unscramble the word using all the letters.</string>
+    <string name="instructions_ru">Разгадай слово используя все буквы.</string>
     <string name="skip">Skip</string>
+    <string name="skip_ru">Пропустить</string>
     <string name="submit">Submit</string>
+    <string name="submit_ru">Подтвердить</string>
     <string name="score">Score: %d</string>
+    <string name="score_ru">Счёт: %d</string>
     <string name="word_count">%d/10</string>
     <string name="enter_your_word">Enter your word</string>
+    <string name="enter_your_word_ru">Введите слово</string>
     <string name="congratulations">Congratulations!</string>
+    <string name="congratulations_ru">Поздравляем!</string>
     <string name="you_scored">"You scored: %d"</string>
+    <string name="you_scored_ru">"Вы набрали: %d очков"</string>
     <string name="exit">Exit</string>
+    <string name="exit_ru">Выход</string>
     <string name="play_again">Play Again</string>
+    <string name="play_again_ru">Сыграть снова</string>
     <string name="wrong_guess">Wrong Guess!</string>
+    <string name="wrong_guess_ru">Неправильно!</string>
 </resources>
