@@ -1,8 +1,5 @@
 package com.example.unscramble.ui
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.unscramble.data.MAX_NO_OF_WORDS
 import com.example.unscramble.data.SCORE_INCREASE
@@ -52,11 +49,15 @@ class GameViewModel : ViewModel() {
         return String(tempWord)
     }
 
-    var userGuess by mutableStateOf("")
-        private set
+//    var userGuess by mutableStateOf("")
+//        private set
 
     fun updateUserGuess(guessedWord: String){
-        userGuess = guessedWord
+        _uiState.update { currentState ->
+            currentState.copy(
+                userGuess = guessedWord
+            )
+        }
     }
 
     private fun updateGameState(updatedScore: Int) {
@@ -83,13 +84,15 @@ class GameViewModel : ViewModel() {
     }
 
     fun checkUserGuess() {
-        if (userGuess.equals(currentWord, ignoreCase = true)) {
+        if (_uiState.value.userGuess.equals(currentWord, ignoreCase = true)) {
             val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
             updateGameState(updatedScore)
         } else {
             // User's guess is wrong, show an error
             _uiState.update { currentState ->
-                currentState.copy(isGuessedWordWrong = true)
+                currentState.copy(
+                    isGuessedWordWrong = true
+                )
             }
         }
         // Reset user guess
