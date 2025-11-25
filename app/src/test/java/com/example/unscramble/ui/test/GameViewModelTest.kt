@@ -1,5 +1,6 @@
 package com.example.unscramble.ui.test
 
+import com.example.unscramble.data.Lang
 import com.example.unscramble.data.MAX_NO_OF_WORDS
 import com.example.unscramble.data.SCORE_INCREASE
 import com.example.unscramble.data.getUnscrambledWord
@@ -11,7 +12,12 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GameViewModelTest {
-    private val viewModel = GameViewModel()
+    private val viewModel = GameViewModel(isTesting = true)
+
+    init {
+        viewModel.setLang(Lang.EN)
+        viewModel.resetGame()
+    }
 
     /*Note: The code above uses the thingUnderTest_TriggerOfTest_ResultOfTest format to name the test function name:
 
@@ -90,6 +96,7 @@ class GameViewModelTest {
         // Assert that after 10 questions are answered, the game is over.
         assertTrue(currentGameUiState.isGameOver)
     }
+
     @Test
     fun gameViewModel_WordSkipped_ScoreUnchangedAndWordCountIncreased() {
         var currentGameUiState = viewModel.uiState.value

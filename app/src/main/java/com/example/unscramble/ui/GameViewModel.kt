@@ -1,15 +1,19 @@
 package com.example.unscramble.ui
 
 import androidx.lifecycle.ViewModel
+import com.example.unscramble.data.Lang
 import com.example.unscramble.data.MAX_NO_OF_WORDS
 import com.example.unscramble.data.SCORE_INCREASE
-import com.example.unscramble.data.allWords
+import com.example.unscramble.data.allWordsEn
+import com.example.unscramble.data.allWordsRu
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class GameViewModel : ViewModel() {
+class GameViewModel(
+    private val isTesting: Boolean = false
+) : ViewModel() {
 
     // Game UI state
     // Backing property to avoid state updates from other classes
@@ -21,10 +25,16 @@ class GameViewModel : ViewModel() {
     private var usedWords: MutableSet<String> = mutableSetOf()
 
     init {
-        resetGame()
+        if (!isTesting) {
+            resetGame()
+        }
     }
 
     private fun pickRandomWordAndShuffle(): String {
+        var allWords: Set<String> = when (_uiState.value.lang) {
+            Lang.RU -> allWordsRu.map { it.lowercase() }.toSet()
+            Lang.EN -> allWordsEn.map { it.lowercase() }.toSet()
+        }
         when {
             allWords.size == 0 -> allWords = setOf("test", "empty")
             usedWords.size == allWords.size -> usedWords.clear()
@@ -105,8 +115,28 @@ class GameViewModel : ViewModel() {
         updateUserGuess("")
     }
 
+    fun setLang(lang: Lang) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                lang = lang
+            )
+        }
+        _uiState.update { currentState ->
+            currentState.copy(
+                currentScrambledWord = pickRandomWordAndShuffle()
+            )
+        }
+    }
+
     fun resetGame() {
         usedWords.clear()
-        _uiState.value = GameUiState(currentScrambledWord = pickRandomWordAndShuffle())
+
+        val currentLang = _uiState.value.lang
+        _uiState.value = GameUiState(
+            currentScrambledWord = pickRandomWordAndShuffle(),
+            lang = currentLang,
+            currentWordCount = 1,
+            score = 0
+        )
     }
 }

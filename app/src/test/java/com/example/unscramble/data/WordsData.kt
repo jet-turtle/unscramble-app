@@ -20,7 +20,7 @@ const val MAX_NO_OF_WORDS = 10
 const val SCORE_INCREASE = 20
 
 // List with all the words for the Game
-val allWords: Set<String> =
+val allWordsEn: Set<String> =
     setOf(
         "at",
         "sea",
@@ -38,6 +38,6 @@ val allWords: Set<String> =
  * Maps words to their lengths. Each word in allWords has a unique length. This is required since
  * the words are randomly picked inside GameViewModel and the selection is unpredictable.
  */
-private val wordLengthMap: Map<Int, String> = allWords.associateBy({ it.length }, { it })
+private val wordLengthMap: Map<Int, String> = allWordsEn.associateBy({ it.length }, { it })
 
 internal fun getUnscrambledWord(scrambledWord: String) = wordLengthMap[scrambledWord.length] ?: ""

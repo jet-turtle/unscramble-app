@@ -19,6 +19,7 @@ import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -56,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.unscramble.R
+import com.example.unscramble.data.Lang
 import com.example.unscramble.ui.theme.UnscrambleTheme
 
 @Composable
@@ -63,8 +65,8 @@ fun GameScreen(
     gameViewModel: GameViewModel = viewModel()
 ) {
     val gameUiState by gameViewModel.uiState.collectAsState()
-
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val currentLang = gameUiState.lang
 
     Column(
         modifier = Modifier
@@ -75,12 +77,23 @@ fun GameScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = { gameViewModel.setLang(Lang.RU) }) {
+                Text("RU")
+            }
+            TextButton(onClick = { gameViewModel.setLang(Lang.EN) }) {
+                Text("EN")
+            }
+        }
         Text(
-            text = stringResource(R.string.app_name),
+            text = stringResource(if (currentLang == Lang.RU) R.string.app_name_ru else R.string.app_name),
             style = typography.titleLarge,
         )
         GameLayout(
+            lang = currentLang,
             currentScrambledWord = gameUiState.currentScrambledWord,
             isGuessWrong = gameUiState.isGuessedWordWrong,
             userGuess = gameUiState.userGuess,
@@ -107,7 +120,7 @@ fun GameScreen(
                 }
             ) {
                 Text(
-                    text = stringResource(R.string.submit),
+                    text = stringResource(if (currentLang == Lang.RU) R.string.submit_ru else R.string.submit_en),
                     fontSize = 16.sp
                 )
             }
@@ -117,13 +130,14 @@ fun GameScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(R.string.skip),
+                    text = stringResource(if (currentLang == Lang.RU) R.string.skip_ru else R.string.skip_en),
                     fontSize = 16.sp
                 )
             }
         }
 
         GameStatus(
+            lang = currentLang,
             score = gameUiState.score,
             modifier = Modifier.padding(20.dp)
         )
@@ -131,6 +145,7 @@ fun GameScreen(
 
     if (gameUiState.isGameOver) {
         FinalScoreDialog(
+            lang = currentLang,
             score = gameUiState.score,
             onPlayAgain = { gameViewModel.resetGame() }
         )
@@ -138,12 +153,12 @@ fun GameScreen(
 }
 
 @Composable
-fun GameStatus(score: Int, modifier: Modifier = Modifier) {
+fun GameStatus(lang: Lang, score: Int, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
     ) {
         Text(
-            text = stringResource(R.string.score, score),
+            text = stringResource(if (lang == Lang.RU) R.string.score_ru else R.string.score_en, score),
             style = typography.headlineMedium,
             modifier = Modifier.padding(8.dp)
         )
@@ -152,6 +167,7 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun GameLayout(
+    lang: Lang,
     currentScrambledWord: String,
     isGuessWrong: Boolean,
     userGuess: String,
@@ -186,7 +202,7 @@ fun GameLayout(
                 style = typography.displayMedium
             )
             Text(
-                text = stringResource(R.string.instructions),
+                text = stringResource(if (lang == Lang.RU) R.string.instructions_ru else R.string.instructions_en),
                 textAlign = TextAlign.Center,
                 style = typography.titleMedium
             )
@@ -203,9 +219,9 @@ fun GameLayout(
                 onValueChange = onUserGuessChanged,
                 label = {
                     if (isGuessWrong) {
-                        Text(stringResource(R.string.wrong_guess))
+                        Text(stringResource(if (lang == Lang.RU) R.string.wrong_guess_ru else R.string.wrong_guess_en))
                     } else {
-                        Text(stringResource(R.string.enter_your_word))
+                        Text(stringResource(if (lang == Lang.RU) R.string.enter_your_word_ru else R.string.enter_your_word_en))
                     }
                 },
                 isError = isGuessWrong,
@@ -225,6 +241,7 @@ fun GameLayout(
  */
 @Composable
 private fun FinalScoreDialog(
+    lang: Lang,
     score: Int,
     onPlayAgain: () -> Unit,
     modifier: Modifier = Modifier
@@ -237,8 +254,8 @@ private fun FinalScoreDialog(
             // button. If you want to disable that functionality, simply use an empty
             // onCloseRequest.
         },
-        title = { Text(text = stringResource(R.string.congratulations)) },
-        text = { Text(text = stringResource(R.string.you_scored, score)) },
+        title = { Text(text = stringResource(if (lang == Lang.RU) R.string.congratulations_ru else R.string.congratulations_en)) },
+        text = { Text(text = stringResource(if (lang == Lang.RU) R.string.you_scored_ru else R.string.you_scored_en, score)) },
         modifier = modifier,
         dismissButton = {
             TextButton(
@@ -246,18 +263,18 @@ private fun FinalScoreDialog(
                     activity.finish()
                 }
             ) {
-                Text(text = stringResource(R.string.exit))
+                Text(text = stringResource(if (lang == Lang.RU) R.string.exit_ru else R.string.exit_en))
             }
         },
         confirmButton = {
             TextButton(onClick = onPlayAgain) {
-                Text(text = stringResource(R.string.play_again))
+                Text(text = stringResource(if (lang == Lang.RU) R.string.play_again_ru else R.string.play_again_en))
             }
         }
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GameScreenPreview() {
     UnscrambleTheme {
