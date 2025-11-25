@@ -71,7 +71,7 @@ class GameViewModel(
     }
 
     private fun updateGameState(updatedScore: Int) {
-        if (usedWords.size == MAX_NO_OF_WORDS) {
+        if (_uiState.value.currentWordCount == MAX_NO_OF_WORDS) {
             // Last round in the game, update isGameOver to true, don't pick a new word
             _uiState.update { currentState ->
                 currentState.copy(
