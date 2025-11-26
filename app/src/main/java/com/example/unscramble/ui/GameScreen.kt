@@ -20,6 +20,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -48,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -70,6 +72,8 @@ fun GameScreen(
 
     Column(
         modifier = Modifier
+            .fillMaxHeight()
+            .background(colorResource(R.color.background))
             .statusBarsPadding()
             .verticalScroll(rememberScrollState())
             .safeDrawingPadding()
@@ -78,7 +82,7 @@ fun GameScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
             TextButton(onClick = { gameViewModel.setLang(Lang.RU) }) {
@@ -90,6 +94,7 @@ fun GameScreen(
         }
         Text(
             text = stringResource(if (currentLang == Lang.RU) R.string.app_name_ru else R.string.app_name),
+            color = colorScheme.primary,
             style = typography.titleLarge,
         )
         GameLayout(
@@ -199,7 +204,7 @@ fun GameLayout(
             )
             Text(
                 text = currentScrambledWord,
-                style = typography.displayMedium
+                style = typography.displaySmall
             )
             Text(
                 text = stringResource(if (lang == Lang.RU) R.string.instructions_ru else R.string.instructions_en),
